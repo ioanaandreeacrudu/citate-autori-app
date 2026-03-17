@@ -1,0 +1,25 @@
+{
+  "quotes": [
+    {
+      "id": "1",
+      "author": "Socrates",
+      "quote": "The only true wisdom is in knowing you know nothing."
+    },
+    {
+      "id": "2",
+      "author": "Einstein",
+      "quote": "Imagination is more important than knowledge."
+    },
+    {
+      "id": "3",
+      "author": "Author",
+      "quote": "The soul becomes dyed with the color of its thoughts."
+    },
+    {
+      "id": "4",
+      "author": "Klaus Mikaelson",
+      "quote": "Always and Forever"
+    }
+  ],
+  "$schema": "./node_modules/json-server/schema.json"
+}

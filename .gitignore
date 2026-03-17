@@ -1,0 +1,29 @@
+# Dependenţe
+
+node_modules/
+
+package-lock.json
+
+# Fişiere de sistem
+
+.DS_Store
+
+Thumbs.db
+
+# Fişiere de configurare environment (date sensibile)
+
+.env
+
+.env.local
+
+# Directoare de build
+
+dist/
+
+build/
+
+# Fişiere log
+
+*.log
+
+npm-debug.log*
