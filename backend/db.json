@@ -19,6 +19,11 @@
       "id": "4",
       "author": "Klaus Mikaelson",
       "quote": "Always and Forever"
+    },
+    {
+      "id": "5",
+      "author": "Confucius",
+      "quote": "It doesn't matter how slowly you go as long as you don't stop."
     }
   ],
   "$schema": "./node_modules/json-server/schema.json"
