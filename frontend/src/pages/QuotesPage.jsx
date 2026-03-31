@@ -11,6 +11,7 @@ export default function QuotesPage() {
   const [searchTerm, setSearchTerm] = useState("");
 
   // Primul useEffect: Gestionează Debounce (așteptarea de 400ms)
+  
   useEffect(() => {
     const timer = setTimeout(() => {
       setSearchTerm(inputValue);
@@ -20,6 +21,7 @@ export default function QuotesPage() {
   }, [inputValue]);
 
   // Al doilea useEffect: Execută căutarea când searchTerm se schimbă 
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => {
     setLoading(true);
     setError(null);
