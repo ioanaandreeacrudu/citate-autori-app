@@ -1,49 +1,50 @@
 const BASE_URL = "http://localhost:5000/api/quotes";
 
-// GET - toate citatele
-export async function getAllQuotes() {
-  const response = await fetch(BASE_URL);
-  if (!response.ok) throw new Error("Nu s-au putut prelua citatele.");
-  return response.json();
+// GET - toate citatele cu filtrare opțională [cite: 1029, 1030]
+export async function getAllQuotes(search = "") {
+  const url = search.trim()
+    ? `${BASE_URL}?search=${encodeURIComponent(search.trim())}`
+    : BASE_URL; // [cite: 1031, 1032]
+  const response = await fetch(url); // [cite: 1033]
+  if (!response.ok) throw new Error("Nu s-au putut prelua citatele."); // [cite: 1034]
+  return response.json(); // [cite: 1034]
 }
 
-// POST - adaugă citat
+// POST - adaugă citat [cite: 118]
 export async function addQuote(quoteData) {
   const response = await fetch(BASE_URL, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(quoteData),
-  });
+  }); // [cite: 123, 124, 125]
 
   if (!response.ok) {
-    const err = await response.json();
-    throw new Error(err.errors?.join(", ") || "Nu s-a putut adăuga citatul.");
+    const err = await response.json(); // [cite: 127, 128]
+    throw new Error(err.errors?.join(", ") || "Nu s-a putut adăuga citatul."); // [cite: 130]
   }
-
-  return response.json();
+  return response.json(); // [cite: 133]
 }
 
-// PUT - update citat
+// PUT - actualizează citat [cite: 136, 138]
 export async function updateQuote(id, quoteData) {
   const response = await fetch(`${BASE_URL}/${id}`, {
     method: "PUT",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(quoteData),
-  });
+  }); // [cite: 140, 141]
 
   if (!response.ok) {
-    const err = await response.json();
-    throw new Error(err.errors?.join(", ") || "Nu s-a putut actualiza citatul.");
+    const err = await response.json(); // [cite: 143, 144]
+    throw new Error(err.errors?.join(", ") || "Nu s-a putut actualiza citatul."); // [cite: 145]
   }
-
-  return response.json();
+  return response.json(); // [cite: 150]
 }
 
-// DELETE - șterge citat
+// DELETE - șterge citat [cite: 152, 155]
 export async function deleteQuote(id) {
   const response = await fetch(`${BASE_URL}/${id}`, {
     method: "DELETE",
-  });
+  }); // [cite: 158]
 
-  if (!response.ok) throw new Error("Nu s-a putut șterge citatul.");
+  if (!response.ok) throw new Error("Nu s-a putut șterge citatul."); // [cite: 159]
 }
