@@ -1,8 +1,9 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import QuoteCard from "../components/QuoteCard";
-import { getAllQuotes, addQuote, updateQuote, deleteQuote } from "../api/quotesApi";
 import { useFormValidation } from "../hooks/useFormValidation";
+// IMPORT 
+import { getAllQuotes, addQuote, updateQuote, deleteQuote, fetchAuthorImage } from "../api/quotesApi";
 
 const VALIDATION_RULES = {
   author: {
@@ -30,9 +31,33 @@ export default function ManagePage() {
   const [feedback, setFeedback] = useState({ message: "", type: "" });
   const [loading, setLoading] = useState(true);
 
+  // STARI NOI pentru imagine - mutate în interiorul funcției 
+  const [imageUrl, setImageUrl] = useState("");
+  const [imageLoading, setImageLoading] = useState(false);
+  const [imageError, setImageError] = useState("");
+
   const { errors, validate, clearErrors } = useFormValidation(VALIDATION_RULES);
 
   useEffect(() => { fetchQuotes(); }, []);
+
+  // HANDLER pentru căutare imagine 
+  async function handleFetchImage() {
+    if (!formData.author.trim()) {
+      setImageError("Introduceți mai întâi numele autorului.");
+      return;
+    }
+    setImageLoading(true);
+    setImageError("");
+    try {
+      const result = await fetchAuthorImage(formData.author);
+      setImageUrl(result.imageUrl);
+    } catch (err) {
+      setImageError(err.message);
+      setImageUrl("");
+    } finally {
+      setImageLoading(false);
+    }
+  }
 
   async function fetchQuotes() {
     try {
@@ -52,12 +77,14 @@ export default function ManagePage() {
   async function handleSubmit(e) {
     e.preventDefault();
     if (!validate(formData)) return;
+    // Includem imageUrl în payload 
+    const payload = { ...formData, imageUrl };
     try {
       if (editingQuote) {
-        await updateQuote(editingQuote.id, formData);
+        await updateQuote(editingQuote.id, payload);
         showFeedback("Citatul a fost actualizat cu succes.", "success");
       } else {
-        await addQuote(formData);
+        await addQuote(payload);
         showFeedback("Citatul a fost adăugat cu succes.", "success");
       }
       resetForm();
@@ -70,12 +97,14 @@ export default function ManagePage() {
   function handleEdit(quote) {
     setEditingQuote(quote);
     setFormData({ author: quote.author, quote: quote.quote });
+    setImageUrl(quote.imageUrl || ""); // Populează imaginea la editare 
+    setImageError("");
     clearErrors();
     window.scrollTo({ top: 0, behavior: "smooth" });
   }
 
   async function handleDelete(id) {
-    if (window.confirm("Eşti sigur că vrei să ştergi acest citat?")) return;
+    if (!window.confirm("Eşti sigur că vrei să ştergi acest citat?")) return;
     try {
       await deleteQuote(id);
       showFeedback("Citatul a fost şters.", "success");
@@ -88,6 +117,8 @@ export default function ManagePage() {
   function resetForm() {
     setEditingQuote(null);
     setFormData({ author: "", quote: "" });
+    setImageUrl(""); // Resetează imaginea 
+    setImageError("");
     clearErrors();
   }
 
@@ -125,6 +156,46 @@ export default function ManagePage() {
               <input id="author" name="author" type="text" value={formData.author} onChange={handleChange} placeholder="ex. Marcus Aurelius" className={inputClass("author")} />
               {errors.author && <p className="mt-1 text-xs text-red-500 flex items-center gap-1"><span>⚠️</span> {errors.author}</p>}
             </div>
+
+            {/* SECTIUNE IMAGINE  */}
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Imagine autor</label>
+              <div className="flex gap-2">
+                <button
+                  type="button"
+                  onClick={handleFetchImage}
+                  disabled={imageLoading || !formData.author.trim()}
+                  className="flex-1 py-2 px-4 text-sm font-medium rounded-lg border border-indigo-300 text-indigo-600 bg-indigo-50 hover:bg-indigo-100 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                >
+                  {imageLoading ? "⌛ Se caută..." : "🔍 Caută imagine pe Wikipedia"}
+                </button>
+                {imageUrl && (
+                  <button
+                    type="button"
+                    onClick={() => { setImageUrl(""); setImageError(""); }}
+                    className="px-3 py-2 text-sm text-red-500 border border-red-200 rounded-lg hover:bg-red-50 transition-colors"
+                  >
+                    X
+                  </button>
+                )}
+              </div>
+              {imageError && <p className="mt-1 text-xs text-red-500"> {imageError}</p>}
+              {imageUrl && !imageError && (
+                <div className="mt-3 flex items-center gap-3 p-3 bg-gray-50 rounded-lg border border-gray-100">
+                  <img
+                    src={`http://localhost:5000${imageUrl}`}
+                    alt={formData.author}
+                    className="w-16 h-16 rounded-full object-cover border-2 border-indigo-200"
+                    onError={e => { e.target.style.display = "none"; }}
+                  />
+                  <div>
+                    <p className="text-xs font-medium text-gray-700">{formData.author}</p>
+                    <p className="text-xs text-gray-400 truncate max-w-xs">{imageUrl}</p>
+                  </div>
+                </div>
+              )}
+            </div>
+
             <div>
               <label htmlFor="quote" className="block text-sm font-medium text-gray-700 mb-1">Citat</label>
               <textarea id="quote" name="quote" value={formData.quote} onChange={handleChange} placeholder="Introduceți citatul..." rows={4} className={`${inputClass("quote")} resize-none`} />

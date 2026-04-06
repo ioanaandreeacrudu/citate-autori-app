@@ -3,27 +3,38 @@
     {
       "id": "1",
       "author": "Socrates",
-      "quote": "The only true wisdom is in knowing you know nothing."
+      "quote": "The only true wisdom is in knowing you know nothing.",
+      "imageURL": ""
     },
     {
       "id": "2",
       "author": "Einstein",
-      "quote": "Imagination is more important than knowledge."
+      "quote": "Imagination is more important than knowledge.",
+      "imageURL": ""
     },
     {
       "id": "3",
       "author": "Author",
-      "quote": "The soul becomes dyed with the color of its thoughts."
+      "quote": "The soul becomes dyed with the color of its thoughts.",
+      "imageURL": ""
     },
     {
       "id": "4",
       "author": "Klaus Mikaelson",
-      "quote": "Always and Forever"
+      "quote": "Always and Forever",
+      "imageURL": ""
     },
     {
       "id": "5",
       "author": "Confucius",
-      "quote": "It doesn't matter how slowly you go as long as you don't stop."
+      "quote": "It doesn't matter how slowly you go as long as you don't stop.",
+      "imageURL": ""
+    },
+    {
+      "id": "6",
+      "author": "Socrate",
+      "quote": "Există doar un lucru bun, știința, și doar unul rău, neștiința.",
+      "imageUrl": "/images/socrate.jpg"
     }
   ],
   "$schema": "./node_modules/json-server/schema.json"

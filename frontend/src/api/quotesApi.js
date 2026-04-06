@@ -25,19 +25,33 @@ export async function addQuote(quoteData) {
   return response.json(); // [cite: 133]
 }
 
-// PUT - actualizează citat [cite: 136, 138]
+// POST /api/quotes/fetch-image
+export async function fetchAuthorImage(author) {
+  const response = await fetch(`${BASE_URL.replace("/quotes", "")}/quotes/fetch-image`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ author }),
+  });
+
+  if (!response.ok) {
+    const err = await response.json();
+    throw new Error(err.error || "Nu s-a putut prelua imaginea.");
+  }
+  return response.json(); // { imageUrl: "/images/..." }
+}
+
 export async function updateQuote(id, quoteData) {
   const response = await fetch(`${BASE_URL}/${id}`, {
     method: "PUT",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(quoteData),
-  }); // [cite: 140, 141]
+  });
 
   if (!response.ok) {
-    const err = await response.json(); // [cite: 143, 144]
-    throw new Error(err.errors?.join(", ") || "Nu s-a putut actualiza citatul."); // [cite: 145]
+    const err = await response.json();
+    throw new Error(err.errors?.join(", ") || "Nu s-a putut actualiza citatul.");
   }
-  return response.json(); // [cite: 150]
+  return response.json();
 }
 
 // DELETE - șterge citat [cite: 152, 155]
